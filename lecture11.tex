@@ -1,71 +1,11 @@
 % !TEX root = main.tex
 
-\section{Lecture 11: Generalised Vertical coordinates}
-\begin{flushright}\textbf{[by Chris Bladwell]}\end{flushright}
-
-In this lecture we consider kinematics in generalised vertical coordinates (GVCs). This based on Chapter 18.3-18.9 and Chapter 8.15 of \cite{Griffies2019}.
-
-{\color{red}Navid: Chris some general comments:\\
-1. Please use \verb"\boldsymbol{}" for vectors instead of \verb"\mathbf{}" (see lecture 0).\\
-2. Please punctuate your equations.\\
-(Sorry for nagging about these but if I start putting commas and periods in everybody's equation I'll be out of time :). )\\
-3. Can you add 1-2 introductory sentences in the beginning saying what this lecture is about and what will you try to derive? It'll be good to give the reader a brief intro for what's going to follow before diving in the details.\\
-4. A schematic possibly showing the surface, the vectors, the dia-surface velocity would be awesome.}
-
-Consider an iso-surface of a scalar field $\sigma = \sigma(x,y,z,t)$. The Generalised Vertical Coordinates are $(\bar{t}, \bar{x}, \bar{y}, \sigma)$, where $\bar{t}=t$, $\bar{x}=x$ and $\bar{y}=y$ in the usual Cartesian coordinates $(t,x,y,z)$. We denote the velocity of a reference point on the surface, $\mathbf{v}^{(\sigma)}$. The evolution of the surface is given by
-\begin{equation}
-    \frac{\partial \sigma}{\partial t} + \mathbf{v}^{(\sigma)} = 0
-\end{equation}
-such that
-\begin{equation}
-    \frac{\partial \sigma}{\partial t} = -\mathbf{v}^{(\sigma)}
-\end{equation}
-The material evolution of the surface [reference material derivative] is given by
-\begin{equation}
-    \frac{D \sigma}{D t} = \frac{\partial \sigma}{\partial t} + \mathbf{v}\cdot \boldsymbol{\nabla} \sigma
-\end{equation}
-The diahaline flux {\color{red}[Navid: ?? diasurface?]} of matter across the material surface is given by
-\begin{align}
-    \hat{\mathbf{n}}\cdot (\mathbf{v}-\mathbf{v}^{(\sigma)})&= \frac{1}{|\boldsymbol{\nabla} \sigma|} \frac{D \sigma }{D t} \\
-    &= \frac{\dot{\sigma}}{|\boldsymbol{\nabla} \sigma|},
-\end{align}
-which has units $\text{m}\,\text{s}^{-1}$. {\color{red}(Above we denoted $\dot\sigma\equiv D\sigma/Dt$.)} The material time derivative vanishes when there is no flux across the surface. The transport across a $\sigma$ surface is given by
-\begin{equation}
-    \frac{\text{d}\mathcal{S}}{|\boldsymbol{\nabla} \sigma|}\dot{\sigma},
-\end{equation}
-where $\text{d} S\big/|\boldsymbol{\nabla} \sigma|=\left| \partial z\big/\partial \sigma\right|\text{d}A$. \\
-\newline
-The volume of fluid crossing the iso-surface per unit area is given by the dia-surface velocity component,
-\begin{equation}
-    w^{(\dot{\sigma})}=\frac{\partial z}{\partial \sigma}\dot{\sigma}
-\end{equation}
-Using the following identities for a constant surface in GVC,
-\begin{align}
-    &\left[\frac{\partial z}{\partial \bar{x}} \right]_{\sigma} = -\frac{(\partial \sigma/\partial x)_{z}}{(\partial \sigma /\partial z)}, & -\left[\frac{\partial z}{\partial \bar{y}} \right]_{\sigma}=\frac{(\partial \sigma/\partial y)_{z}}{(\partial \sigma /\partial z)},
-\end{align}
-and operators
-\begin{align}
-    &\boldsymbol{\nabla}_{\sigma}=\mathbf{\hat{x}}\frac{\partial}{\partial \bar{x}} + \mathbf{\hat{y}}\frac{\partial}{\partial \bar{y}}, &\boldsymbol{\nabla}_{\sigma}=\mathbf{\hat{x}}\frac{\partial}{\partial x} + \mathbf{\hat{y}}\frac{\partial}{\partial y}
-\end{align}
-we obtain the identity of the slope of a surface $\sigma$,
-\begin{equation}\label{eq:sigma_slope}
-    \boldsymbol{\nabla}_{\sigma}z = -\frac{\boldsymbol{\nabla}_{z} \sigma}{\partial \sigma / \partial z},
-\end{equation}
-Using this expression, the dia-surface velocity can be written
-\begin{align}
-    w^{(\dot{\sigma})}&= \frac{\partial z}{\partial \sigma} \frac{D \sigma}{D t} \nonumber \\
-    &= \frac{\partial z}{\partial \sigma}\left( |\boldsymbol{\nabla}|\mathbf{\hat{n}}\cdot (\mathbf{v}-\mathbf{v}^{(\sigma)}) \right) \nonumber \textcolor{red}{\text{(Is there something wrong here? $|\boldsymbol{\nabla}|$??)}} \\
-    &= \frac{\partial z}{\partial \sigma}\boldsymbol{\nabla} \sigma \cdot \mathbf{v} + \frac{\partial z}{\partial \sigma}\frac{\partial \sigma}{\partial t} \nonumber \\
-    &= \frac{\partial z}{\partial \sigma}\left(\boldsymbol{\nabla}_{z}\sigma + \mathbf{\hat{z}}\frac{\partial \sigma}{\partial z} \right) \cdot \mathbf{v} + \frac{\partial z}{\partial \sigma}\frac{\partial \sigma}{\partial t} \nonumber \\
-    &= \left( \mathbf{\hat{z}} - \boldsymbol{\nabla}_{\sigma}z \right) \cdot \mathbf{v} + \frac{\partial z}{\partial \sigma}\frac{\partial \sigma}{\partial t} \nonumber \\
-    &= \left( \mathbf{\hat{z}} - \boldsymbol{\nabla}_{\sigma}z \right) \cdot \mathbf{v} - \frac{\partial z}{\partial t} \nonumber \\
-    &= w - \left(\frac{\partial }{\partial t} + \mathbf{u}\cdot \boldsymbol{\nabla}_{\sigma} \right)z,
-    \label{eq:dia_surface_velocity}
-\end{align}
-which used Equation \eqref{eq:sigma_slope} and the identity
-\begin{equation}
-    \left[\frac{\partial z}{\partial t} \right]_{\sigma} = -\frac{(\partial \sigma/\partial t)_{z}}{(\partial \sigma /\partial z)}.
-\end{equation}
-
-{\color{red}[Navid: perhaps a sentence in the end explaining what does eq. 12.11 says or what we've accomplished?]}
-
+\section{Lecture 11: Large-scale ocean circulations}\label{sec:lecture11}
+\begin{flushright}\textbf{[by Annie]}\end{flushright}
+  
+ \begin{itemize}
+   \item
+   Wind-driven gyres (Stomme/Munk models?)
+   \item
+   Sverdrup balance
+ \end{itemize}

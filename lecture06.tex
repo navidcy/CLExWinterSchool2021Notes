@@ -1,139 +1,15 @@
 % !TEX root = main.tex
 
-\section{Lecture 6: Tensors and index notation} \label{sec:tensors}
-\begin{flushright}\textbf{[by Ole Richter]}\end{flushright}
-
-\subsection{Tensor philosophy}
-In GFD we often perform coordinate transformations such as Cartesian-Spherical or Lagrangian-Eulerian and tensors are the proven mean to handle these in a clean manner. One way of presenting tensors is through index notation, e.g. $\boldsymbol{x} =[x_1,x_2,x_3]$ $i=1,2,3$ or $\bar{\bar{A}}$ as 
-\begin{equation}
-    A_{ij} = \begin{bmatrix} 
-                A_{11} & A_{12} & A_{13} \\
-                A_{21} & A_{22} & A_{23} \\
-                A_{31} & A_{32} & A_{33}
-                \end{bmatrix} \quad i,j=1,2,3.
-\end{equation}
-
-{\color{red} [Navid: I modified this a bit; have a look.]\\
-
-Here, we will not make any attempt to be rigorous in defining what a tensor is; readers can refer to \citet{Griffies2019} and references therein. Instead, we will restrict ourselves to the very basics and mostly deal with how one manipulate tensors.
-
-Tensors can be thought as `generalised vectors'. A vector is nothing else but `a tensor of rank 1'. The rank of a tensor corresponds its dimensions and this depends on the quantity the tensor means to  describe. For example:} \\
-\begin{center}
- \begin{tabular}{cccc}
-   \textbf{Tensor rank} & \textbf{also known as} & \textbf{index notation} & \textbf{Example} \\
-    0  & scalar & $\alpha$ & Temperature \\
-    1  & vector & $\alpha_{i}$ & Velocity \\
-    2  & matrix & $\alpha_{ij}$ & Stress \\
-    3  & & $\alpha_{ijk}$ & \\
-\end{tabular}   
-\end{center}
-Note that a tensor is not equivalent to a matrix. Even though we can present tensors as matrices, e.g., a 1-rank tensor can be displayed as 1 column or 1 row matrix (aka vector), tensor components are inevitably connected to the underlying coordinate system. The components of a tensor change in an exact manner during coordinate transformations, while the components of matrices may or may not have this trait depending on what they describe.
-
-\subsection{Index notation}
-
-Index notation often offers shortcuts and overview when playing in tensors calculus. Mastering the rules of index notation will, inevitably, change your live!
-\begin{enumerate}
-    \item Reoccurring indices imply summation (aka Einstein summation convention):
-    \begin{equation}
-        \boldsymbol{x} \cdot \boldsymbol{y}=\sum_i x_i y_i \equiv x_i y_i.
-    \end{equation}
-    \item The number of indices that does not reoccur is equivalent to the resulting tensor rank, e.g.
-    \begin{equation}
-           A_{\mu i} x_i =  y_\mu.
-    \end{equation}
-    \item The choice of the index symbol does not matter:
-        \begin{equation}
-            A_{\mu i}  x_i = A_{\mu j} x_j.
-        \end{equation}
-
-    \item The `Kronecker tensor' or  `Kronecker delta' is defined as
-    \begin{equation}
-        \delta_{ij} =
-    \begin{cases}
-            1, &         \text{if } i=j,\\
-            0, &         \text{if } i\neq j.
-    \end{cases} 
-    \end{equation}
-    \item The `Levi-Civita tensor' or `antisymmetric symbol' is defined as:
-    \begin{equation}
-        \epsilon_{ijk} =
-    \begin{cases}
-            1, &        \text{if } ijk \text{ is even permutation of 1-2-3},\\
-            -1, &       \text{if } ijk \text{ is odd permutation of 1-2-3},\\
-            0 , &       \text{if any two indices are the same}.  
-    \end{cases} 
-    \end{equation}
-    Example: $312$ is obtained from $123$ through the following steps: $123 \rightarrow 132 \rightarrow 312$. Thus, $312$ is an \emph{even} permutation of $123$ as it requires two permutations of neighbouring digits.
-\end{enumerate}
-
-
-    
-\subsection{Properties of tensors: symmetric and antisymmetric}
-
-A tensor can be symmetric or antisymmetric with respect to a subset of its indices. For example, the 3rd-rank tensor $A_{ijk}$ might be symmetric with the first two indices ($A_{ijk}=A_{jik}$) but not with any other indices, e.g. $A_{ijk} \ne A_{ikj}$ and $A_{ijk} \ne A_{kji}$. Similarly, if $A_{ijk}$ is antisymmetric with $ij$, then $A_{ijk}=-A_{jik}$ applies, but $A_{ijk} \ne -A_{ikj}$.
-
-A `theorem' states that if we sum over two indices for two tensors for which one of them is symmetric and the other one is anti-symmetric then the sum vanishes. You can show this by, e.g., assuming that $S_{ijk}$ is symmetric with respect to $ij$ and $A_{ijk}$ is antisymmetric with respect to $ij$, and then look at their dot product:
-    \begin{equation}
-        A_{ijk}S_{ijk} = A_{\alpha jk}S_{\alpha jk}= A_{\alpha \beta k}S_{\alpha \beta k} =
-            A_{j \beta k}S_{j \beta k} =  A_{j i k}S_{j i k} = -A_{ijk}S_{ijk}.
-    \end{equation}
-
-It turns out that with the above definition the $\epsilon_{ijk}$ symbol is anti-symmetric to all pair of indices. That is why is also referred to as `anti-symmetric symbol'. Since $\delta_{ij}$ is symmetric with respect to its two indices, the contraction of $\delta_{ij}$ and $\epsilon_{ijk}$ vanishes:
-    \begin{equation}
-        \epsilon_{ijk} \delta_{ij} = \epsilon_{ijk} \delta_{ij} = \epsilon_{iik} = 0.
-    \end{equation}
-
-\subsection{Some examples}
-
-With index notation you can easily describe the dot product between two vectors:
-    \begin{equation}
-            \boldsymbol{\alpha} \cdot \boldsymbol{\beta} = \alpha_i \beta_i.
-    \end{equation}
-Or express the components of a cross product:
-    \begin{equation}
-            [\boldsymbol{\alpha} \times \boldsymbol{\beta} ]_i = \epsilon_{ijk} \alpha_j \beta_k.
-    \end{equation}        
-For example, the first component of the cross product $\boldsymbol{\alpha} \times \boldsymbol{\beta}$ is:
-\begin{equation}
-    \begin{aligned}
-           \epsilon_{1jk} \alpha_j \beta_k &= \epsilon_{12k} \alpha_2 \beta_k + \epsilon_{13k} \alpha_3 \beta_k \\
-            &= \epsilon_{123} \alpha_2 \beta_3 + \epsilon_{132} \alpha_3 \beta_2 \\
-            &= \alpha_2 \beta_3 - \alpha_3 \beta_2.
-        \end{aligned}
-    \end{equation}
-Similarly, you get the components of the curl of a vector $\boldsymbol{\alpha}$ are
-    \begin{equation}
-         [\boldsymbol{\nabla} \times \boldsymbol{\alpha} ]_i = \epsilon_{ijk} \frac{\partial }{\partial x_j}\alpha_k.
-    \end{equation}
-
-With the wonders of index notation, we can easily prove that the divergence of the curl \emph{of any vector} vanishes: $\boldsymbol{\nabla}\cdot (\boldsymbol{\nabla} \times \boldsymbol{u})=0$.
-
-Proof:
-  \begin{align}
-     \boldsymbol{\nabla}\cdot (\boldsymbol{\nabla} \times \boldsymbol{u}) &=\frac{\partial}{\partial x_i}[\boldsymbol{\nabla} \times \boldsymbol{u}]_i \nonumber\\
-        &= \frac{\partial}{\partial x_i} \epsilon_{ijk} \frac{\partial}{\partial x_j} u_k \nonumber\\
-        &= \underbrace{\epsilon_{ijk}}_{\substack{\textrm{antisymmetric}\\\textrm{in $i\leftrightarrow j$}}}\underbrace{\frac{\partial}{\partial x_i}\frac{\partial}{\partial x_j}}_{\substack{\textrm{symmetric}\\\textrm{in $i\leftrightarrow j$}}}u_k = 0.
-    \end{align}
-    
-It is argued that none of all of these complicated vector identities is worth memorising. Instead, what we only need to know is the identity:
-    \begin{equation}
-        \epsilon_{ijk}\epsilon_{klm} = \delta_{il}\delta_{jm} - \delta_{im}\delta_{jl},
-    \end{equation}
-which we could easily prove by painful substitution of all index values.
-
-Using the above, we can prove any complicated vector identity on the spot. For example, one can show in just a few lines that:
-\begin{equation}
-    \boldsymbol{\nabla} \times (\boldsymbol{\nabla} \times \boldsymbol{u}) = \boldsymbol{\nabla}(\boldsymbol{\nabla}\cdot \boldsymbol{u}) - \nabla^2\boldsymbol{u}.
-\end{equation}
-
-The proof goes as follows:
-\begin{align}
-    [\boldsymbol{\nabla} \times (\boldsymbol{\nabla} \times \boldsymbol{u})]_i &= \epsilon_{ijk} \frac{\partial}{\partial x_j}[\boldsymbol{\nabla} \times \boldsymbol{u}]_k \nonumber\\
-    &= \epsilon_{ijk} \frac{\partial}{\partial x_j}\epsilon_{k\rho\mu} \frac{\partial}{\partial x_\rho}u_\mu   \nonumber\\
-    &=\epsilon_{ijk}\epsilon_{k\rho\mu} \frac{\partial}{\partial x_j}\frac{\partial}{\partial x_\rho} u_\mu  \nonumber\\
-    &= (\delta_{i\rho}\delta_{j\mu} - \delta_{i\mu}\delta_{j\rho})\frac{\partial}{\partial x_j}\frac{\partial}{\partial x_\rho} u_\mu  \nonumber\\
-    &=\delta_{i\rho}\delta_{j\mu}\frac{\partial}{\partial x_j}\frac{\partial}{\partial x_\rho} u_\mu - \delta_{i\mu}\delta_{j\rho}\frac{\partial}{\partial x_j}\frac{\partial}{\partial x_\rho} u_\mu  \nonumber\\
-    &=\frac{\partial}{\partial x_j}\frac{\partial}{\partial x_i} u_j - \frac{\partial}{\partial x_j}\frac{\partial}{\partial x_j} u_i \nonumber\\
-    &=\frac{\partial}{\partial x_i}\underbrace{\frac{\partial u_j}{\partial x_j}}_{=\boldsymbol{\nabla}\cdot\boldsymbol{u}} - \frac{\partial}{\partial x_j}\frac{\partial}{\partial x_j} u_i \nonumber\\
-    &=[\boldsymbol{\nabla}(\boldsymbol{\nabla}\cdot\boldsymbol{u})]_i - [\nabla^2\boldsymbol{u}]_i.
-\end{align}
+\section{Lecture 6: Shallow water}\label{sec:lecture6}
+\begin{flushright}\textbf{[by Navid]}\end{flushright}
+  
+ \begin{itemize}
+   \item
+   Shallow water dynamics
+   \item
+   Gravity waves
+   \item
+   Rossby waves
+   \item
+   PV?
+ \end{itemize}
