@@ -1,0 +1,225 @@
+% !TEX root = main.tex
+
+\section{Lecture 21: Advection Schemes and Numerical Diffusion}
+\begin{flushright}\textbf{[by Ryan Holmes]}\end{flushright}
+
+In this lecture we took an introductory look at numerical advection
+schemes and examined some of their basic properties and issues.
+
+Consider the one-dimensional advection equation,
+\begin{equation}
+\frac{\partial\Theta}{\partial t} = -u \frac{\partial\Theta}{\partial x},\label{L21:ADE}
+\end{equation}
+where $\Theta(x,t)$ is a tracer and $u$ is a \textit{positive}
+constant. A solution can be easily written down,
+\begin{equation}
+\Theta(x,t) = \Theta_0(x-ut),\label{L21:ADEsol}
+\end{equation}
+where $\Theta_0(x)$ is the tracer distribution at the initial time
+$t=0$. In other words, the initial tracer distribution should
+translate toward the positive $x$ direction without changing
+shape. Note that throughout this lecture we will ignore the influence
+of boundary conditions on $x$ (although these can easily be
+incorporated).
+
+We now consider solving Eq. \eqref{L21:ADE} on a discrete grid using
+finite differences, to see how a numerical solution may differ from
+the known analytic solution Eq. \eqref{L21:ADEsol}. We discretize
+Eq. \eqref{L21:ADE} onto a regularly spaced grid $x_i$
+($i\in 1,\cdot\cdot\cdot N$) with grid spacing $\Delta x$ and with a
+regular time step $\Delta t$ such that the discrete time vector is
+given by $t^k$ ($k\in 0,\cdot\cdot\cdot M$). $\Theta_i^k$ denotes the
+value of the tracer at location $x_i$ and time $t^k$.
+
+We will first examine the \textbf{forward-time, backward-space}
+discretization of Eq. \eqref{L21:ADE},
+\begin{equation}
+  \frac{\Theta_i^{k+1}-\Theta_i^k}{\Delta t} = -u
+  \frac{\Theta_i^k-\Theta^k_{i-1}}{\Delta x}.\label{L21:FTBS}
+\end{equation}
+Here we have discretized the time derivative with a forward
+difference and the space derivative with a backward difference. This
+equation is easy to time step forward by rearranging to determine the tracer
+concentration at time step $k+1$ from the tracer concentration at time
+step $k$,
+\begin{equation}
+  \Theta_i^{k+1} = -\frac{u\Delta t}{\Delta x}\left(\Theta_i^k-\Theta^k_{i-1}\right)+\Theta_i^k.\label{L21:EXTS}
+\end{equation}
+
+How does Eq. \eqref{L21:FTBS} differ from the continuous version
+Eq. \eqref{L21:ADE}? To answer this question we employ \textbf{Hirt's
+  Stability Analysis}. Each term in Eq. \eqref{L21:FTBS} is written in
+terms of a Taylor expansion about $\Theta_i^k$. I.e.,
+\begin{align}
+  \Theta_i^{k+1} &= \Theta_i^k+\Delta t\frac{\partial\Theta}{\partial
+  t}\Big|_i^k+\frac{(\Delta t)^2}{2}\frac{\partial^2\Theta}{\partial
+  t^2}\Big|_i^k + \mathcal{O}((\Delta t)^3), \\
+  \Theta_{i-1}^k &= \Theta_i^k-\Delta x\frac{\partial\Theta}{\partial
+  x}\Big|_i^k+\frac{(\Delta x)^2}{2}\frac{\partial^2\Theta}{\partial
+  x^2}\Big|_i^k + \mathcal{O}((\Delta x)^3).
+\end{align}
+Substitution of these forms into Eq. \eqref{L21:FTBS}, followed by
+some tedious rearrangement (This is left as an exercise --- note that one must use the continuous form Eq. \eqref{L21:ADE} to convert the remaining
+time derivatives into spatial derivatives) yields,
+\begin{equation}
+  \frac{\partial\Theta}{\partial t} = -u
+  \frac{\partial\Theta}{\partial x} + \frac{u}{2}\left(\Delta
+    x-u\Delta t\right)\frac{\partial^2\Theta}{\partial x^2} +
+  \mathcal{O}\left((\Delta x)^2,\Delta x\Delta t,(\Delta t)^2\right),\label{L21:FTBSepde}
+\end{equation}
+Eq. \eqref{L21:FTBSepde} is known as the \textbf{modified equivalent
+  PDE for the FTBS scheme}.
+
+Comparing this modified PDE to our original continuous PDE
+[Eq. \eqref{L21:ADE}] shows that the finite difference discretization
+results in a leading order error term proportional to
+$\frac{\partial^2\Theta}{\partial x^2}$ - i.e. a diffusive correction
+term.  We set out to solve an advection equation, but by the act of
+discretizing the equation using finite differences we have in fact
+ended up with an advection--diffusion equation. The coefficient in
+front of the leading order error term can be thought of as a
+\textbf{numerical diffusivity},
+\begin{equation}
+  \kappa_{num} = \frac{u}{2}\left(\Delta x-u\Delta t\right).\quad\text{ FTBS}\label{L21:FTBSKnum}
+\end{equation}
+If $\kappa_{num}>0$ then the diffusion is down-gradient, resulting in
+the weakening of any sharp gradients in the tracer field through
+\textbf{numerical diffusion}. 
+
+However, $\kappa_{num}$ is not guaranteed to be positive. If
+$\kappa_{num}$ is negative, then the leading-order correction term
+drives up-gradient diffusion (or \textit{un-mixing}) which acts to
+increase gradients. Since the rate at which gradients are increased
+depends on the gradients themselves, this can result in exponential
+growth and the solution becomes unstable. Introducing the
+\textbf{Courant} number,
+\begin{equation}
+  C = \frac{u\Delta t}{\Delta x},
+\end{equation}
+the FTBS numerical diffusivity Eq. \eqref{L21:FTBSKnum} can be
+rewritten as,
+\begin{equation}
+  \kappa_{num} = \frac{(\Delta x)^2}{2\Delta t}C(1-C).
+\end{equation}
+Therefore the FTBS scheme is stable if the Courant number is in the
+range $0\leq C\leq 1$. Physically, this condition can be interpreted
+in terms of the \textit{cone of influence} of the backward in space
+operator. For the simple advection equation Eq. \eqref{L21:ADE} the
+solution propagates along characteristics defined by $x=ut$. If this
+information propagates across a grid cell in less than a time step
+(corresponding to $C>1$), then the solution becomes unstable as the
+value $\Theta_i^{k+1}$ cannot be determined from the values
+$\Theta_{i-1}^k$ and $\Theta_i^k$ (if $C=1.5$ then we would need to
+utilize $\Theta_{i-2}^k$ and $\Theta_{i-1}^k$, XXX: Draw a diagram to
+illustrate this). 
+
+The FTBS scheme is only stable when the velocity is positive $u>0$
+(again because for $u<0$ the cone of influence of the backward in
+space operator does not match the characteristics $x=ut$ of the
+solution). This corresponds to an \textit{upwind} advection scheme. If
+$u$ was instead negative, the forward-time, forward-space scheme
+(FTFS) would be stable (providing $|C|<1$). If the sign of $u$ varies
+throughout the domain one could choose to use a forward or a backward
+spatial finite difference depending on the sign of $u$ (known as an
+\textit{upwind} advection scheme).
+
+What about the case $C=1$? With
+$C=1$, $\kappa_{num}=0$ and in fact all of the error terms are
+identically zero. This corresponds to the case where the solution
+propagates exactly one grid cell with each time step, and thus
+the discretized solution is exact. However, it is only
+possible to have $C=1$ at every location if the velocity is constant.
+
+What about centered differences in space? The \textit{forward time,
+  centered space} (FTCS) discretization of Eq. \eqref{L21:ADE} is,
+\begin{equation}
+  \frac{\Theta_i^{k+1}-\Theta_i^k}{\Delta t} = -u
+  \frac{\Theta_{i+1}^{k}-\Theta^k_{i-1}}{2\Delta x}.\label{L21:FTCS}
+\end{equation}
+The corresponding modified equivalent PDE is,
+\begin{equation}
+  \frac{\partial\Theta}{\partial t} = -u
+  \frac{\partial\Theta}{\partial x} - \frac{u^2\Delta t}{2}\frac{\partial^2\Theta}{\partial x^2} +
+  \mathcal{O}\left((\Delta x)^2,\Delta x\Delta t,(\Delta
+    t)^2\right).\quad\text{ equivalent PDE for FTCS}\label{L21:FTCSepde}
+\end{equation}
+In this case the numerical diffusivity,
+\begin{equation}
+  \kappa_{num} = -\frac{u^2\Delta t}{2},
+\end{equation}
+is always negative and thus the FTCS is unstable for any chosen time
+step. One could stabilize schemes such as this by adding explicit
+diffusion to the solution with a diffusivity that exceeds the
+numerical diffusivity (e.g. a term
+$\kappa_p\frac{\partial^2\Theta}{\partial x^2}$ to Eq. \eqref{L21:ADE},
+where $\kappa_p>\kappa_{num}$). In the FTCS case such a scheme is
+known as the \textit{Lax-Wendroff} scheme.
+
+So far we have considered only forward time-stepping schemes. These
+are known as \textit{explicit} in time, and are computationally easy
+to time step as they can be written in the form of
+Eq. \eqref{L21:EXTS}, where all of the RHS terms are known at the
+current time and thus the tracer field at the next time step is easy
+to determine. An example of an \textit{implicit} scheme is the
+\textit{backward time, backward space} (BTBS) scheme,
+\begin{equation}
+  \frac{\Theta_i^{k}-\Theta_i^{k-1}}{\Delta t} = -u
+  \frac{\Theta_i^{k}-\Theta^k_{i-1}}{\Delta x}.\label{L21:BTBS}
+\end{equation}
+The corresponding modified equivalent PDE for BTBS is,
+\begin{equation}
+  \frac{\partial\Theta}{\partial t} = -u
+  \frac{\partial\Theta}{\partial x} + \frac{u}{2}\left(\Delta x + u
+    \Delta t\right)\frac{\partial^2\Theta}{\partial x^2} +
+    \mathcal{O}\left((\Delta x)^2,\Delta x\Delta t,(\Delta
+      t)^2\right).\quad\text{ equivalent PDE for BTBS}\label{L21:FTCSepde}
+\end{equation}
+In this case the numerical diffusivity,
+\begin{equation}
+  \kappa_{num} = \frac{u}{2}\left(\Delta x + u\Delta t\right),
+\end{equation}
+is stable for any $u$ providing that we choose a large enough time
+step. I.e. there is no upper time step stability restriction (or
+Courant condition) on the BTBS scheme. However, for this implicit
+scheme the solution is more difficult to time step, as the RHS of
+Eq. \eqref{L21:BTBS} is evaluated at time level $k$ when only time
+level $k-1$ is known. To solve Eq. \eqref{L21:BTBS} for the new time
+level $k$ we rewrite it as a matrix equation,
+\begin{equation}
+  A_{ij}\Theta_j^k = \Theta_i^{k-1},\label{L21:BTBSmat}
+\end{equation}
+where
+$A_{ij} = (1+\frac{u\Delta t}{\Delta x})\delta_{ij} - \frac{u\Delta
+  t}{\Delta x}\delta_{(i-1)j}$. Eq. \eqref{L21:BTBSmat} can then be
+solved by matrix inversion, but at considerably more cost than the
+simple forward time-stepping schemes considered above.
+
+Finally, we consider the \textit{centered-time, centered-space} (CTCS)
+scheme (centered-time time stepping is also known as leapfrog),
+\begin{equation}
+  \frac{\Theta_i^{k+1}-\Theta_i^{k-1}}{2\Delta t} = -u
+  \frac{\Theta_{i+1}^{k}-\Theta^k_{i-1}}{2\Delta x}.\label{L21:CTCS}
+\end{equation}
+The corresponding modified equivalent PDE for CTCS is,
+\begin{equation}
+  \frac{\partial\Theta}{\partial t} = -u
+  \frac{\partial\Theta}{\partial x} - \frac{u(\Delta x)^2}{6}(1-C^2)\frac{\partial^3\Theta}{\partial x^3} +
+  \mathcal{O}\left((\Delta x)^3,(\Delta x)^2\Delta t,...\right).\quad\text{ equivalent PDE for CTCS}\label{L21:CTCSepde}
+\end{equation}
+This scheme is second-order accurate and the leading-order error term
+now depends on the third-derivative of $\Theta$. This is known as a
+\textit{dispersive} advection scheme, as the third-order derivative
+causes different wave-number components of the solution to propagate
+at different speeds (Exercise: write $\Theta$ in terms of its Fourier
+series in $x$ and substitute into Eq. \eqref{L21:CTCSepde}, retaining only
+the leading-order error term. You will find that the third-order
+derivative modifies the propagation speed of the solution so that it
+is no longer equal to $u$, and is dependent on
+wave-number). Dispersive advection schemes can develop oscillations as
+a result of this dispersion, or separation of different wave-number components
+(a good example to consider is where $\Theta_0$ is a step
+function). Dispersive advection schemes are often combined with
+\textit{flux limiters} which prevent this development of extrema in
+the tracer distribution.
+
+For more information see \citet{Lomax2001}.

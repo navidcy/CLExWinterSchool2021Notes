@@ -1,0 +1,199 @@
+% !TEX root = main.tex
+
+\section{Lecture 3: Dynamics}
+\begin{flushright}\textbf{[by Wilma Huneke]}\end{flushright}
+
+{\color{red}Navid: Wilma, I added some notes/remarks with red.}
+%Rotating reference frame, hydrostatic - Boussinesq - traditional approximations\\
+\textcolor{red}{Wilma: Might add some figures later.}
+
+We start with the mass and momentum equations, the latter is also known as the Navier-Stokes equation:
+
+\begin{gather}
+\frac{D\rho}{Dt} + \rho\boldsymbol{\nabla} \cdot \boldsymbol{v} = 0,
+\label{Eq:mass} \\
+\frac{D\boldsymbol{v}}{Dt} = \underbrace{\frac{\partial \boldsymbol{v}}{\partial t}}_{\text{change in time}} + \underbrace{\left( \boldsymbol{v}\cdot \boldsymbol{\nabla}\right)\boldsymbol{v}}_{\text{adv. of momentum}} = \underbrace{\boldsymbol{g}}_{\text{grav. accel.}} - \underbrace{\frac{\boldsymbol{\nabla} p}{\rho}}_{\text{pressure gradient}} + \underbrace{\nu\nabla^2 \boldsymbol{v}}_{\text{viscous term}},
+\label{Eq:NS}
+\end{gather}
+where the gravitational acceleration is defined as $\boldsymbol{g}= (0,0,-g)$.
+The assumptions that went into the above equations are conservation of mass (equation \ref{Eq:mass}) and conservation of momentum (equation \ref{Eq:NS}). The Navier-Stokes equation additionally assumes a Newtonian fluid, which means the viscous transfer of momentum is linear (non-Newtonian fluids such as ice require a representation of viscosity in tensor form). For a detailed derivation of equations \ref{Eq:mass} and \ref{Eq:NS} see, e.g., \citet{Griffies2019}, chapter 26.
+
+%{\color{red}Navid: Wilma, could you punctuate equations? Equations should be read as prose so commas, periods, or even question marks should appear after them...}
+
+In order to make the dynamic equations useful for ocean modelling, we have
+\begin{enumerate}
+\item to add Coriolis: take into account that we are in rotating reference frame (and do the so-called `traditional approximation'), 
+\item to do the hydrostatic approximation, and
+\item to do the Boussinesq approximation.
+\end{enumerate}
+
+It is important to keep in mind what we omit in steps 1-3 above!
+
+\subsection{Rotating reference frame}
+Equations \ref{Eq:mass} and \ref{Eq:NS} are given in a fixed reference frame. Let us translate the fixed frame to a rotating frame. We define
+
+\begin{equation}
+\begin{aligned}
+\boldsymbol{v}_f &= \frac{d_f\boldsymbol{x}}{dt} \qquad \text{fixed frame velocity,}\\
+\boldsymbol{v}_r &= \frac{d_r\boldsymbol{x}}{dt} \qquad \text{rotating frame velocity,}\\
+\end{aligned}
+\end{equation}
+and translate between the two frames
+\begin{equation}
+\frac{d_f\boldsymbol{x}}{dt} = \frac{d_r\boldsymbol{x}}{dt} + \boldsymbol{\Omega} \times \boldsymbol{x}.
+\label{Eq:fi-ro}
+\end{equation}
+
+Now, let's repeat the process once more, this time for the velocity vector:
+\begin{equation}
+\begin{aligned}
+\frac{d_f\boldsymbol{v}}{dt} &= \frac{d_r\boldsymbol{v}_f}{dt} + \boldsymbol{\Omega} \times \boldsymbol{v}_f\\
+& = \frac{d_r}{dt}\left[\frac{d_f\boldsymbol{x}}{dt}\right]+ \boldsymbol{\Omega} \times \frac{d_f\boldsymbol{x}}{dt} \qquad \implies \text{expand using } (\ref{Eq:fi-ro}) \\
+& = \frac{d_r}{dt}\left[ \frac{d_r\boldsymbol{x}}{dt} + \boldsymbol{\Omega} \times \boldsymbol{x} \right] + \boldsymbol{\Omega} \times \left[ \frac{d_r\boldsymbol{x}}{dt} + \boldsymbol{\Omega} \times \boldsymbol{x}  \right].
+\end{aligned}
+\end{equation}
+
+
+Thus, gathering everything together we get:
+\begin{equation}
+\underbrace{\frac{d_f\boldsymbol{v}}{dt} }_{\text{fixed}} = \underbrace{\frac{d_r\boldsymbol{v}_r}{dt} + 2\boldsymbol{\Omega} \times \boldsymbol{v}_r + \boldsymbol{\Omega}\times (\boldsymbol{\Omega} \times \boldsymbol{x})}_{\text{rotating frame}}.
+\end{equation}
+
+We can now rewrite the Navier-Stokes equation in a rotating framework:
+\begin{equation}
+\frac{D\boldsymbol{v}}{Dt} + \underbrace{2 \boldsymbol{\Omega} \times \boldsymbol{v}}_{\#2} + \underbrace{\boldsymbol{\Omega} \times (\boldsymbol{\Omega} \times \boldsymbol{x})}_{\#1} = \boldsymbol{g} - \frac{\boldsymbol{\nabla} p}{\rho} + \nu \nabla^2 \boldsymbol{v},
+\end{equation}
+where we use from now on the rotating frame velocity.
+
+Let us have a closer look at the two new terms appearing in the rotating framework.
+
+\subsubsection*{\#1: $\qquad \boldsymbol{\Omega} \times (\boldsymbol{\Omega} \times \boldsymbol{x}) = -\boldsymbol{r} |\boldsymbol{\Omega}|^2 \qquad$ Centrifugal force}
+
+The centrifugal force is a body force and depends only on the distance $\boldsymbol{r}$ from the rotation axis (this is not the Earth radius!) and the rotation rate. {\color{red}[Navid: A figure would be useful here. E.g., one might wonder where is $\boldsymbol{r}$ pointing?]} We can combine the centrifugal force with the gravitational acceleration (gravity force) and write
+\begin{equation}
+\boldsymbol{g}* = \boldsymbol{g} + \boldsymbol{r}\Omega^2,
+\end{equation}
+where $|\boldsymbol{\Omega}|^2 = \Omega^2$. %{\color{red}[Navid: This is not an approximation, this is exactly the definition of the modulus of $\boldsymbol{\Omega}$. The $\approx$ should be simply an $=$. Is there a different approximation that was used in getting (3.8)?]} 
+
+{\color{red} Navid: I added this small exercise.}
+
+\noindent\textbf{Exercise:} Prove identity $\boldsymbol{\Omega} \times (\boldsymbol{\Omega} \times \boldsymbol{x}) = -\boldsymbol{r} |\boldsymbol{\Omega}|^2$. (Hint: Index notation (which is introduced in  lecture~\ref{sec:tensors})   proves to be very helpful here.)
+
+When we plug in typical values for the equator ($r\approx 10^6$ m, $\Omega \approx 10^{-4}$ s$^{-1}$, $g \approx 10$ m\,s$^{-1}$), we can see that $r\Omega^2\approx0.05$ is smaller than $\boldsymbol{g}$, but not completely negligible. Therefore, the $\boldsymbol{r}\Omega^2$ is not dropped, but for simplicity the resultant force is often called gravitational force and the asterisk is dropped. 
+
+We now write the combined gravity force and centrifugal force term in potential form:
+\begin{align}
+\boldsymbol{g}*& = \begin{pmatrix}
+0\\0\\-g
+\end{pmatrix} + \boldsymbol{r}\Omega^2 \nonumber\\
+& = \boldsymbol{\nabla}\left[ -g z + \frac{r^2\Omega}{2} \right] \nonumber\\
+& = \boldsymbol{\Omega} \Phi,
+\end{align}
+where $\Phi$ is called the `geopotential'.
+
+Be aware that we ignore the moon gravitation (tides -- one way to implement them in models is in the gravity force term) and ice sheet gravitation. We also assume the Earth is a perfect sphere. These all affect $\boldsymbol{g}$ as well.
+
+\subsubsection*{\#2 $\qquad 2 \boldsymbol{\Omega} \times \boldsymbol{v}$ \qquad Coriolis force}
+
+Let us take the cross product of the Coriolis term and write
+\begin{align}
+2\boldsymbol{\Omega}\times\boldsymbol{v} & = \begin{vmatrix}
+\hat{\boldsymbol{x}} & \hat{\boldsymbol{y}} & \hat{\boldsymbol{z}} \\
+0 & 2\Omega\cos\phi & 2\Omega\sin\phi\\
+u & v & w
+\end{vmatrix} \nonumber\\
+& =  (2 \Omega w \cos\phi - 2\Omega v \sin\phi )\hat{\boldsymbol{x}} +  (2\Omega u \sin \phi)\hat{\boldsymbol{y}} +  (-2 \Omega u \cos \phi)\hat{\boldsymbol{z}} \nonumber\\
+& = (-\tilde{f}w - fv)\hat{\boldsymbol{x}} + fu \hat{\boldsymbol{y}} - \tilde{f}u \hat{\boldsymbol{z}},
+\end{align}
+where we have defined:
+\begin{equation}
+\begin{aligned}
+f &= 2\Omega\sin\phi \qquad \text{traditional Coriolis term, and} \\
+\tilde{f} &= 2\Omega\cos\phi \qquad \text{non-traditional Coriolis term.} \\
+\end{aligned}
+\end{equation}
+
+%{\color{red}[Isn't this notation for (3.11) better? What do you think?]}
+
+{\color{red}[Navid: Again, a figure here might be useful to clarify that $\hat{\boldsymbol{x}}, \hat{\boldsymbol{y}}$ are the locally horizontal unit vectors and $\hat{\boldsymbol{z}}$ the locally vertical unit vector.]}
+
+Most models use only the traditional Coriolis term in the momentum equation, as the following subsection will explain.
+
+
+\subsection{Hydrostatic approximation}
+Let us have a look at the vertical component of the Navier-Stokes equation, taking the Coriolis term into account:
+
+\begin{equation}
+\frac{\partial w}{\partial t} + (\boldsymbol{v}\cdot \boldsymbol{\nabla})w -\tilde{f}u = -g -\frac{1}{\rho} \frac{\partial p}{\partial z} + \nu \nabla^2w
+\label{Eq:VertMom}
+\end{equation}
+
+A scaling analysis {\color{red}(i.e., plugging in typical values for the various terms)} reveals that the dominant balance in the above equation \ref{Eq:VertMom} comes between the pressure term and gravity:
+{\color{red}[Navid: Sorry, I had to be more specific... What I meant is to write up 1-2 sentences explaining that, e.g., if we are interested for motions that involve down to mesoscale eddies then  horizontal length scales are ... km, a velocity scale is .... m/s and therefore.....]}
+%Terms that are neglected in the hydrostatic approximation:
+\begin{equation}
+\begin{aligned}
+\frac{\partial w}{\partial t} \qquad &\rightarrow \frac{10^{-3}}{10^5} = 10^{-8}\\
+(\boldsymbol{v}\cdot \boldsymbol{\nabla})w \qquad &\rightarrow \frac{1}{10^{4}} 10^{-3} = 10^{-7}\\
+\tilde{f}u \qquad &\rightarrow 10^{-5}\\
+\nu \nabla^2w \qquad &\rightarrow \text{small} \\
+\hline
+g \qquad &\rightarrow 10
+\end{aligned}
+\label{Eq:HydrScale}
+\end{equation}
+
+The balance between pressure and gravity is the so-called `hydrostatic pressure balance' and it allows us to simplify the vertical momentum equation to
+
+\begin{equation}
+\frac{\partial p}{\partial z} = - \rho g.
+\end{equation}
+
+%{\color{red}[Navid: Wilma I think you should first do the scalings and show how (3.12) reduces to (3.13) and then proceed with the the comments below on no-prognostic eq. for $w$, etc. What do you reckon?}
+
+Thus, the hydrostatic approximation removes the vertical velocity $w$ as a prognostic variable (no $\frac{\partial w}{\partial t} = ...$). A non-hydrostatic model retains the full vertical momentum equation and $w$ as a prognostic variable. 
+
+The above scalings \ref{Eq:HydrScale} allow us to discard the vertical component in the Coriolis force
+\begin{equation}
+2\boldsymbol{\Omega} \times \boldsymbol{v} \approx (\tilde{f}w - fv)\hat{\boldsymbol{x}}  + fu \hat{\boldsymbol{y} } .
+\end{equation}
+
+Furthermore, a similar scaling argument when comparing $w< 10^{-3}$ ms$^{-1}$ with $v=1$ ms$^{-1}$ allows us to discard the non-traditional Coriolis term in the $x$-component of the Coriolis term, known as the traditional approximation. Hydrostatic models therefore only make use of the traditional Coriolis term.
+
+Quasi non-hydrostatic models retain the $\tilde{f}u$ term and have a balance between
+\begin{equation}
+\tilde{f}u = -g -\frac{1}{\rho}\frac{\partial p}{\partial z}.
+\end{equation}
+
+To sum up, the hydrostatic approximation emphasises the strong effect that gravity has on the direction it acts on. The hydrostatic approximation is computationally advantageous as it reduces the number of prognostic variables our model needs to evolve. However, we need to remember that it holds only when the horizontal velocities are much larger than the vertical velocities (rule of thumb: horizontal length scales $\approx$ 10 km vs vertical length scale $\approx$ 10 m). Internal waves can be resolved in a hydrostatic model, but they cannot overturn. Hydrostatic models are, therefore, not a useful tool to study turbulent processes for which the ratio of the horizontal and vertical scales become equal. Quasi non-hydrostatic models retain the non-traditional Coriolis term, but suffer under increased computational costs.
+
+\subsection{Boussinesq approximation}
+The Boussinesq approximation assumes the ocean is an incompressible fluid and ignores density fluctuations except in the gravity term.
+
+The mass conservation equation \ref{Eq:mass} reduces to
+\begin{equation}
+\cancel{\frac{D\rho}{Dt}} + \rho \boldsymbol{\nabla} \cdot \boldsymbol{v} = 0 \Longrightarrow  \boldsymbol{\nabla} \cdot \boldsymbol{v} = 0 \qquad \text{(conservation of mass, incompressibility).} \label{incompressibility}
+\end{equation}
+
+From \eqref{incompressibility} above we can obtain a diagnostic equation for $w$:
+\begin{equation}
+ \frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} + \frac{\partial w}{\partial z} = 0 \Longrightarrow
+ \frac{\partial w}{\partial z} = -\frac{\partial u}{\partial x} - \frac{\partial v}{\partial y}.
+\end{equation}
+
+Therefore, the horizontal momentum equations reduce to
+\begin{equation}
+\begin{aligned}
+\frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} + v\frac{\partial u}{\partial y} + w\frac{\partial u}{\partial z} -fv &= -\frac{1}{\rho_0} \frac{\partial p}{\partial x} + \nu \nabla^2 u, \\
+\frac{\partial v}{\partial t} + u\frac{\partial v}{\partial x} + v\frac{\partial v}{\partial y} + w\frac{\partial v}{\partial z} +fu &= -\frac{1}{\rho_0} \frac{\partial p}{\partial x} + \nu \nabla^2 u.
+\end{aligned}
+\end{equation}
+
+Remarks: 
+\begin{itemize}
+\item The density $\rho_0$ in the pressure term is a constant reference density. Be careful as the subscript 0 is often omitted for simplicity.
+\item The ocean density $\rho = f(S, T, p)$ can still change and produce a pressure gradient. The Boussinesq approximation assumes, however, that $\rho$ does not change due to compressibility of the fluid.
+\item The Boussinesq approximation filters out sound waves from the equations as they require density fluctuations to propagate.
+\item The Boussinesq approximation gives as a simple diagnostic equation for the vertical velocity based on the mass conservation equation. Non-incompressible models have a more complicated form of the diagnostic equation (but it is still diagnostic as long as the model is hydrostatic).
+\item The horizontal momentum equations still have $w$ and with it vertical advection. 
+\end{itemize} 
